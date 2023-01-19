@@ -6,6 +6,8 @@ from rest_framework import status
 from .serializers import *
 from rest_framework.views import APIView
 from .services import UserProfileService
+from rest_framework.permissions import IsAuthenticated
+
 
 class UserProfileServiceWrapper(APIView):
     def __init__(self):
