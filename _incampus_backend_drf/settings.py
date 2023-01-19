@@ -46,8 +46,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     '_incampus_backend_drf',
-    'userprofile',
     'rest_framework',
+    'userprofile',
+    'grade',
 ]
 
 REST_FRAMEWORK = {

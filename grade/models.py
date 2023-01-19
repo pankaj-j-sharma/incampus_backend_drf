@@ -14,5 +14,15 @@ class Grade(BaseModel):
     hall_charges = models.IntegerField(blank=True,null=True)
 
 
+class ExamGrade(BaseModel):
+    grade= models.ForeignKey("Grade",on_delete=models.CASCADE)
+    range = models.CharField(max_length=50, blank=True, null=True)
+    mark_from = models.IntegerField(blank=True,null=True)
+    mark_to = models.IntegerField(blank=True,null=True)
+    mark_grade = models.CharField(max_length=50, blank=True, null=True)
+
+
 class Subject(BaseModel):
     name = models.CharField(max_length=50, blank=True, null=True)
+
+
