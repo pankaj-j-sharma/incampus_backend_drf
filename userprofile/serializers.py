@@ -3,6 +3,6 @@ from rest_framework import serializers
 
 class ProfileDetailsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields=["id","username","first_name","last_name","email"]
+        model = IncampusUser
+        fields=["id","username","first_name","last_name","email","profilepic","incampus_type"]
 
