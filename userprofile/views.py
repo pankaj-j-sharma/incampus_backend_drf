@@ -12,4 +12,4 @@ class ProfileDetailsAPIView(RetrieveUpdateAPIView):
             id = self.request.query_params.get('id',None)
             return User.objects.get(id=id)
         except User.DoesNotExist:
-            return None    
+            raise Http404    
