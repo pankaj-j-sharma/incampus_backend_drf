@@ -25,4 +25,8 @@ class ExamGrade(BaseModel):
 class Subject(BaseModel):
     name = models.CharField(max_length=50, blank=True, null=True)
 
-
+class SubjectRouting(BaseModel):
+    subject= models.ForeignKey("grade.Subject",on_delete=models.CASCADE)
+    grade= models.ForeignKey("grade.Grade",on_delete=models.CASCADE)
+    teacher = models.ForeignKey("teacher.IncampusTeacher",on_delete=models.CASCADE)
+    subject_fee = models.FloatField(blank=True,null=True)

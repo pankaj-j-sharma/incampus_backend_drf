@@ -12,6 +12,14 @@ urlpatterns = [
 
     path('examgradelist', ExamGradeListAPIView.as_view(), name = 'list_examgrade'),
     path('examgradeinfo', ExamGradeRetrieveUpdateAPIView.as_view(), name = 'update_examgrade'),
-    path('create_exam_grade', ExamGradeCreateAPIView.as_view(), name = 'create_examgrade')
+    path('create_exam_grade', ExamGradeCreateAPIView.as_view(), name = 'create_examgrade'),
+
+    path('subjectlist', SubjectListAPIView.as_view(), name = 'list_subject'),
+    path('subjectinfo', SubjectRetrieveUpdateAPIView.as_view(), name = 'update_subject'),
+    path('create_subject', SubjectCreateAPIView.as_view(), name = 'create_subject'),
+
+    path('subjectroutinglist', SubjectRoutingListAPIView.as_view(), name = 'list_subjectrouting'),
+    path('subjectroutinginfo', SubjectRoutingRetrieveUpdateAPIView.as_view(), name = 'update_subjectrouting'),
+    path('create_subjectrouting', SubjectRoutingCreateAPIView.as_view(), name = 'create_subjectrouting')
 
 ]

@@ -15,3 +15,13 @@ class ExamGradeListSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExamGrade
         fields="__all__"
+
+class SubjectListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subject
+        fields="__all__"
+
+class SubjectRoutingListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubjectRouting
+        fields="__all__"
