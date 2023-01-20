@@ -20,6 +20,10 @@ urlpatterns = [
 
     path('subjectroutinglist', SubjectRoutingListAPIView.as_view(), name = 'list_subjectrouting'),
     path('subjectroutinginfo', SubjectRoutingRetrieveUpdateAPIView.as_view(), name = 'update_subjectrouting'),
-    path('create_subjectrouting', SubjectRoutingCreateAPIView.as_view(), name = 'create_subjectrouting')
+    path('create_subjectrouting', SubjectRoutingCreateAPIView.as_view(), name = 'create_subjectrouting'),
+
+    path('dailyschedulelist', DailyScheduleListAPIView.as_view(), name = 'list_dailyschedule'),
+    path('dailyscheduleinfo', DailyScheduleRetrieveUpdateAPIView.as_view(), name = 'update_dailyschedule'),
+    path('create_dailyschedule', DailyScheduleCreateAPIView.as_view(), name = 'create_dailyschedule')
 
 ]

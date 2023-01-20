@@ -16,7 +16,7 @@ urlpatterns = [
     # path('friends/', include('friends.urls')),
     path('grade/', include('grade.urls')),
     # path('payment/', include('payment.urls')),
-    # path('student/', include('student.urls')),
+    path('student/', include('student.urls')),
     path('teacher/', include('teacher.urls')),
     path('userprofile/', include('userprofile.urls'))
 ]

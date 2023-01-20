@@ -30,3 +30,13 @@ class SubjectRouting(BaseModel):
     grade= models.ForeignKey("grade.Grade",on_delete=models.CASCADE)
     teacher = models.ForeignKey("teacher.IncampusTeacher",on_delete=models.CASCADE)
     subject_fee = models.FloatField(blank=True,null=True)
+
+
+class DailyTimeTable(BaseModel):
+    schedule_day = models.CharField(max_length=50, blank=True, null=True)    
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    classroom = models.ForeignKey("grade.ClassRoom",on_delete=models.CASCADE)
+    subject= models.ForeignKey("grade.Subject",on_delete=models.CASCADE)
+    grade= models.ForeignKey("grade.Grade",on_delete=models.CASCADE)
+    teacher = models.ForeignKey("teacher.IncampusTeacher",on_delete=models.CASCADE)

@@ -2,6 +2,8 @@ from rest_framework.generics import ListAPIView,RetrieveUpdateAPIView,CreateAPIV
 from grade.models import *
 from grade.serializers import *
 from django.http import Http404
+from itertools import chain
+from rest_framework.response import Response
 
 
 # Classroom Module CRUD operations
@@ -107,6 +109,12 @@ class SubjectRoutingRetrieveUpdateAPIView(RetrieveUpdateDestroyAPIView):
     model = Subject
     serializer_class=SubjectRoutingListSerializer
 
+    def __update_field(self,source,target):
+        for attrib in source:
+            if getattr(target,attrib,None) and source.get(attrib)!=getattr(target,attrib,None):
+                setattr(target,attrib,source.get(attrib))
+        return target
+
     def get_object(self):
         try:
             id = self.request.query_params.get('id',None)
@@ -114,16 +122,84 @@ class SubjectRoutingRetrieveUpdateAPIView(RetrieveUpdateDestroyAPIView):
             teacher_id = self.request.query_params.get('teacher_id',None)
             grade_id = self.request.query_params.get('grade_id',None)
 
-            subjectroutingobj = SubjectRouting.objects.get(id=id) | \
-                                SubjectRouting.objects.get(subject_id=subject_id) | \
-                                SubjectRouting.objects.get(teacher_id=teacher_id) | \
-                                SubjectRouting.objects.get(grade_id=grade_id)
+            subjectroutingobj = None
+            if id:
+                subjectroutingobj = SubjectRouting.objects.filter(id=id)
+            if teacher_id and not subjectroutingobj:
+                subjectroutingobj = SubjectRouting.objects.filter(teacher_id=teacher_id)
+            if subject_id and not subjectroutingobj:
+                subjectroutingobj = SubjectRouting.objects.filter(subject_id=subject_id)
+            if grade_id and not subjectroutingobj:
+                subjectroutingobj = SubjectRouting.objects.filter(grade_id=grade_id)
+
+            if subjectroutingobj:
+                subjectroutingobj = subjectroutingobj.first()
 
             return subjectroutingobj
         except SubjectRouting.DoesNotExist:
             raise Http404    
 
+    def put(self,request):
+        id = request.query_params.get('id',None)
+        json_body=request.data
+        subroutingobj = SubjectRouting.objects.get(id=id)
+        subroutingobj = self.__update_field(json_body,subroutingobj)
+        subroutingobj.save()
+        serialiserobj = SubjectRoutingListSerializer(subroutingobj)
+        return Response(serialiserobj.data)
+
 
 class SubjectRoutingCreateAPIView(CreateAPIView):
     queryset = SubjectRouting.objects.all()
     serializer_class=SubjectRoutingListSerializer
+
+
+
+
+# DailyTimeTable Module CRUD operations
+class DailyScheduleListAPIView(ListAPIView):
+    serializer_class=DailyTimetableListSerializer
+    def get_queryset(self):
+        try:
+            id = self.request.query_params.get('id',None)
+            teacher_id = self.request.query_params.get('teacher_id',None)
+            grade_id = self.request.query_params.get('grade_id',None)
+            classroom_id = self.request.query_params.get('classroom_id',None)
+            dailyscheduleobj = list(chain(DailyTimeTable.objects.filter(id=id),DailyTimeTable.objects.filter(teacher_id=teacher_id),DailyTimeTable.objects.filter(grade_id=grade_id),DailyTimeTable.objects.filter(classroom_id=classroom_id)))            
+            if not ( id or teacher_id or grade_id or classroom_id):
+                dailyscheduleobj = DailyTimeTable.objects.all()
+            return dailyscheduleobj
+        except DailyTimeTable.DoesNotExist:
+            raise Http404    
+
+
+class DailyScheduleRetrieveUpdateAPIView(RetrieveUpdateDestroyAPIView):
+    model = DailyTimeTable
+    serializer_class=DailyTimetableListSerializer
+
+    def __update_field(self,source,target):
+        for attrib in source:
+            if getattr(target,attrib,None) and source.get(attrib)!=getattr(target,attrib,None):
+                setattr(target,attrib,source.get(attrib))
+        return target
+
+    def get_object(self):
+        try:
+            id = self.request.query_params.get('id',None)
+            return DailyTimeTable.objects.get(id=id)
+        except DailyTimeTable.DoesNotExist:
+            raise Http404    
+
+    def put(self,request):
+        id = request.query_params.get('id',None)
+        json_body=request.data
+        dailytimetableobj = DailyTimeTable.objects.get(id=id)
+        dailytimetableobj = self.__update_field(json_body,dailytimetableobj)
+        dailytimetableobj.save()
+        serialiserobj = DailyTimetableListSerializer(dailytimetableobj)
+        return Response(serialiserobj.data)
+
+
+class DailyScheduleCreateAPIView(CreateAPIView):
+    queryset = DailyTimeTable.objects.all()
+    serializer_class=DailyTimetableListSerializer

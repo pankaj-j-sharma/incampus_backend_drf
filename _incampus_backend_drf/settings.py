@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'userprofile',
     'grade',
     'teacher',
-    
+    'student',
 ]
 
 REST_FRAMEWORK = {

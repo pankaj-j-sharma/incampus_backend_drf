@@ -14,5 +14,6 @@ class TeacherSalary(BaseModel):
     month = models.CharField(max_length=50, blank=True, null=True)
     year = models.CharField(max_length=50, blank=True, null=True)
     status = models.CharField(max_length=50, blank=True, null=True, default="Active")
-    amount = models.FloatField(blank=True,null=True)
-
+    salary_amount = models.FloatField(blank=True,null=True)
+    paid_amount = models.FloatField(blank=True,null=True)
+    payment_ref = models.CharField(max_length=50, blank=True, null=True)

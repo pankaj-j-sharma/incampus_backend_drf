@@ -25,3 +25,8 @@ class SubjectRoutingListSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubjectRouting
         fields="__all__"
+
+class DailyTimetableListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DailyTimeTable
+        fields="__all__"
