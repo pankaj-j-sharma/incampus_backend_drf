@@ -30,3 +30,10 @@ class IncampusParent(BaseModel,User):
     phone_no = models.CharField(max_length=50, blank=True, null=True)
     added_by = models.ForeignKey("userprofile.IncampusUser",on_delete=models.CASCADE)
     child = models.ManyToManyField("IncampusStudent")
+
+
+class StudentExamMarks(BaseModel):
+    student = models.ForeignKey("IncampusStudent",on_delete=models.CASCADE)
+    exam = models.ForeignKey("grade.ExamSchedule",on_delete=models.CASCADE)
+    marks_obtained = models.IntegerField()
+    remarks = models.TextField(max_length=255,null=True,blank=True)

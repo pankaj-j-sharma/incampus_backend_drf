@@ -24,6 +24,14 @@ urlpatterns = [
 
     path('dailyschedulelist', DailyScheduleListAPIView.as_view(), name = 'list_dailyschedule'),
     path('dailyscheduleinfo', DailyScheduleRetrieveUpdateAPIView.as_view(), name = 'update_dailyschedule'),
-    path('create_dailyschedule', DailyScheduleCreateAPIView.as_view(), name = 'create_dailyschedule')
+    path('create_dailyschedule', DailyScheduleCreateAPIView.as_view(), name = 'create_dailyschedule'),
+
+    path('examlist', ExamListAPIView.as_view(), name = 'list_exam'),
+    path('examinfo', ExamRetrieveUpdateAPIView.as_view(), name = 'update_exam'),
+    path('create_exam', ExamCreateAPIView.as_view(), name = 'create_exam'),
+
+    path('examschedulelist', ExamScheduleListAPIView.as_view(), name = 'list_examschedule'),
+    path('examscheduleinfo', ExamScheduleRetrieveUpdateAPIView.as_view(), name = 'update_examschedule'),
+    path('create_examschedule', ExamScheduleCreateAPIView.as_view(), name = 'create_examschedule')
 
 ]

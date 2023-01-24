@@ -203,3 +203,66 @@ class DailyScheduleRetrieveUpdateAPIView(RetrieveUpdateDestroyAPIView):
 class DailyScheduleCreateAPIView(CreateAPIView):
     queryset = DailyTimeTable.objects.all()
     serializer_class=DailyTimetableListSerializer
+
+
+
+# IncampusExam Module CRUD operations
+class ExamListAPIView(ListAPIView):
+    queryset = IncampusExam.objects.all()
+    serializer_class=ExamListSerializer
+
+
+class ExamRetrieveUpdateAPIView(RetrieveUpdateDestroyAPIView):
+    model = IncampusExam
+    serializer_class=ExamListSerializer
+
+    def __update_field(self,source,target):
+        for attrib in source:
+            if getattr(target,attrib,None) and source.get(attrib)!=getattr(target,attrib,None):
+                setattr(target,attrib,source.get(attrib))
+        return target
+
+    def get_object(self):
+        try:
+            id = self.request.query_params.get('id',None)
+            return IncampusExam.objects.get(id=id)
+        except IncampusExam.DoesNotExist:
+            raise Http404    
+
+
+    def put(self,request):
+        id = request.query_params.get('id',None)
+        json_body=request.data
+        incampusxamobj = IncampusExam.objects.get(id=id)
+        incampusxamobj = self.__update_field(json_body,incampusxamobj)
+        incampusxamobj.save()
+        serialiserobj = ExamListSerializer(incampusxamobj)
+        return Response(serialiserobj.data)
+
+
+class ExamCreateAPIView(CreateAPIView):
+    queryset = IncampusExam.objects.all()
+    serializer_class=ExamListSerializer
+
+
+# ExamSchedule Module CRUD operations
+class ExamScheduleListAPIView(ListAPIView):
+    queryset = ExamSchedule.objects.all()
+    serializer_class=ExamScheduleListSerializer
+
+
+class ExamScheduleRetrieveUpdateAPIView(RetrieveUpdateDestroyAPIView):
+    model = ExamSchedule
+    serializer_class=ExamScheduleListSerializer
+
+    def get_object(self):
+        try:
+            id = self.request.query_params.get('id',None)
+            return ExamSchedule.objects.get(id=id)
+        except ExamSchedule.DoesNotExist:
+            raise Http404    
+
+
+class ExamScheduleCreateAPIView(CreateAPIView):
+    queryset = ExamSchedule.objects.all()
+    serializer_class=ExamScheduleListSerializer

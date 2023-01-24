@@ -30,3 +30,13 @@ class DailyTimetableListSerializer(serializers.ModelSerializer):
     class Meta:
         model = DailyTimeTable
         fields="__all__"
+
+class ExamListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IncampusExam
+        fields="__all__"
+
+class ExamScheduleListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExamSchedule
+        fields="__all__"
