@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'grade',
     'teacher',
     'student',
+    'attendance'
 ]
 
 REST_FRAMEWORK = {

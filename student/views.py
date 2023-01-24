@@ -16,7 +16,7 @@ class StudentRetrieveUpdateAPIView(RetrieveUpdateDestroyAPIView):
 
     def __update_field(self,source,target):
         for attrib in source:
-            if getattr(target,attrib,None) and source.get(attrib)!=getattr(target,attrib,None):
+            if getattr(target,attrib,None)!=None and source.get(attrib)!=getattr(target,attrib,None):
                 setattr(target,attrib,source.get(attrib))
         return target
 
@@ -76,3 +76,41 @@ class StudentPaymentRetrieveUpdateAPIView(RetrieveUpdateDestroyAPIView):
 class StudentPaymentCreateAPIView(CreateAPIView):
     queryset = StudentPayment.objects.all()
     serializer_class=StudentPaymentListSerializer
+
+
+
+# IncampusParent Module CRUD operations
+class ParentListAPIView(ListAPIView):
+    queryset = IncampusParent.objects.all()
+    serializer_class=ParentListSerializer
+
+
+class ParentRetrieveUpdateAPIView(RetrieveUpdateDestroyAPIView):
+    model = IncampusParent
+    serializer_class=ParentListSerializer
+
+    def __update_field(self,source,target):
+        for attrib in source:
+            if getattr(target,attrib,None) and source.get(attrib)!=getattr(target,attrib,None):
+                setattr(target,attrib,source.get(attrib))
+        return target
+
+    def get_object(self):
+        try:
+            id = self.request.query_params.get('id',None)
+            return IncampusParent.objects.get(id=id)
+        except IncampusParent.DoesNotExist:
+            raise Http404    
+
+    def put(self,request):
+        id = request.query_params.get('id',None)
+        json_body=request.data
+        parentobj = IncampusParent.objects.get(id=id)
+        parentobj = self.__update_field(json_body,parentobj)
+        parentobj.save()
+        serialiserobj = ParentListSerializer(parentobj)
+        return Response(serialiserobj.data)
+
+class ParentCreateAPIView(CreateAPIView):
+    queryset = IncampusParent.objects.all()
+    serializer_class=ParentListSerializer

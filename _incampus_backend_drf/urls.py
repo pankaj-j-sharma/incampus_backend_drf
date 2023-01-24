@@ -9,7 +9,7 @@ urlpatterns = [
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 
     # path('admin/', admin.site.urls),
-    # path('attendance/', include('attendance.urls')),   
+    path('attendance/', include('attendance.urls')),   
     # path('communication/', include('communication.urls')),
     # path('dashboard/', include('dashboard.urls')),
     # path('event/', include('event.urls')),   
