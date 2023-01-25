@@ -114,3 +114,40 @@ class ParentRetrieveUpdateAPIView(RetrieveUpdateDestroyAPIView):
 class ParentCreateAPIView(CreateAPIView):
     queryset = IncampusParent.objects.all()
     serializer_class=ParentListSerializer
+
+
+# StudentExamMarks Module CRUD operations
+class StudentMarksListAPIView(ListAPIView):
+    queryset = StudentExamMarks.objects.all()
+    serializer_class=StudentMarksListSerializer
+
+
+class StudentMarksRetrieveUpdateAPIView(RetrieveUpdateDestroyAPIView):
+    model = StudentExamMarks
+    serializer_class=StudentMarksListSerializer
+
+    def __update_field(self,source,target):
+        for attrib in source:
+            if getattr(target,attrib,None) and source.get(attrib)!=getattr(target,attrib,None):
+                setattr(target,attrib,source.get(attrib))
+        return target
+
+    def get_object(self):
+        try:
+            id = self.request.query_params.get('id',None)
+            return StudentExamMarks.objects.get(id=id)
+        except StudentExamMarks.DoesNotExist:
+            raise Http404    
+
+    def put(self,request):
+        id = request.query_params.get('id',None)
+        json_body=request.data
+        studentmarksobj = StudentExamMarks.objects.get(id=id)
+        studentmarksobj = self.__update_field(json_body,studentmarksobj)
+        studentmarksobj.save()
+        serialiserobj = StudentMarksListSerializer(studentmarksobj)
+        return Response(serialiserobj.data)
+
+class StudentMarksCreateAPIView(CreateAPIView):
+    queryset = StudentExamMarks.objects.all()
+    serializer_class=StudentMarksListSerializer

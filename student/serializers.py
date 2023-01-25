@@ -16,3 +16,7 @@ class ParentListSerializer(serializers.ModelSerializer):
         model = IncampusParent
         fields="__all__"
 
+class StudentMarksListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentExamMarks
+        fields="__all__"

@@ -14,4 +14,8 @@ urlpatterns = [
     path('parent', ParentRetrieveUpdateAPIView.as_view(), name = 'get_parent'),
     path('add_parent', ParentCreateAPIView.as_view(), name = 'create_parent'),
 
+    path('studentmarks_list', StudentMarksListAPIView.as_view(), name = 'list_studentmarks'),
+    path('studentmarks', StudentMarksRetrieveUpdateAPIView.as_view(), name = 'get_studentmarks'),
+    path('add_studentmarks', StudentMarksCreateAPIView.as_view(), name = 'create_studentmarks'),
+
 ]

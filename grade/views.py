@@ -255,12 +255,27 @@ class ExamScheduleRetrieveUpdateAPIView(RetrieveUpdateDestroyAPIView):
     model = ExamSchedule
     serializer_class=ExamScheduleListSerializer
 
+    def __update_field(self,source,target):
+        for attrib in source:
+            if getattr(target,attrib,None) and source.get(attrib)!=getattr(target,attrib,None):
+                setattr(target,attrib,source.get(attrib))
+        return target
+
     def get_object(self):
         try:
             id = self.request.query_params.get('id',None)
             return ExamSchedule.objects.get(id=id)
         except ExamSchedule.DoesNotExist:
             raise Http404    
+
+    def put(self,request):
+        id = request.query_params.get('id',None)
+        json_body=request.data
+        examschedulemobj = ExamSchedule.objects.get(id=id)
+        examschedulemobj = self.__update_field(json_body,examschedulemobj)
+        examschedulemobj.save()
+        serialiserobj = ExamScheduleListSerializer(examschedulemobj)
+        return Response(serialiserobj.data)
 
 
 class ExamScheduleCreateAPIView(CreateAPIView):
