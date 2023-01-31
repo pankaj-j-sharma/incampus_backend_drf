@@ -13,7 +13,7 @@ urlpatterns = [
     # path('communication/', include('communication.urls')),
     # path('dashboard/', include('dashboard.urls')),
     # path('event/', include('event.urls')),   
-    # path('friends/', include('friends.urls')),
+    path('friends/', include('friends.urls')),
     path('grade/', include('grade.urls')),
     path('payment/', include('payment.urls')),
     path('student/', include('student.urls')),
