@@ -18,5 +18,6 @@ urlpatterns = [
     path('payment/', include('payment.urls')),
     path('student/', include('student.urls')),
     path('teacher/', include('teacher.urls')),
-    path('userprofile/', include('userprofile.urls'))
+    path('userprofile/', include('userprofile.urls')),
+    path('datagen/', include('datafaker.urls')),  
 ]

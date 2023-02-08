@@ -19,10 +19,11 @@ class DashboardDataRetrieveAPIView(RetrieveAPIView,DashboardDataServiceClient):
         self.init_service_obj()
 
     def get(self, request, format=None):
-        output_response={}
+        output_response={'success':False , 'results':{}}
 
-        output_response["card_data"] = self.dashboard_data_service_obj.load_dashboard_card_data()
-        output_response["graph_data"] =  self.dashboard_data_service_obj.load_dashboard_graph_data()
+        output_response['results']["card_data"] = self.dashboard_data_service_obj.load_dashboard_card_data()
+        output_response['results']["graph_data"] =  self.dashboard_data_service_obj.load_dashboard_graph_data()
+        output_response['success']=True
 
         return Response(output_response,status=HTTP_200_OK)  
 

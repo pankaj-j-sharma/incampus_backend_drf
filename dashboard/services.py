@@ -22,11 +22,21 @@ class DashboardDataService:
 
 
     def load_dashboard_card_data(self):
-        response = {}
-        response["students"] = IncampusStudent.objects.all().count()
-        response["teachers"] = IncampusTeacher.objects.all().count()
-        response["income"] = sum(StudentPayment.objects.all().values_list("amount_paid",flat=True))
-        response["expenses"] = IncampusStudent.objects.all().count()
+        response = []
+
+        students = {"title":"Students", "span_text": IncampusStudent.objects.all().count() , "description1":"3.48%" , "description2":"Since last month" , "description_class":"fa fa-arrow-up", "icon_div_class":"icon icon-shape bg-success text-white rounded-circle shadow" , "icon_class":"fas fa-chart-bar"}
+
+        teachers = {"title":"Teachers", "span_text": IncampusTeacher.objects.all().count() , "description1":"3.48%" , "description2":"Since last month" , "description_class":"fas fa-arrow-down", "icon_div_class":"icon icon-shape bg-success text-white rounded-circle shadow" , "icon_class":"fas fa-chart-pie"}
+
+        income = {"title":"Income", "span_text": sum(StudentPayment.objects.all().values_list("amount_paid",flat=True)) , "description1":"1.10%" , "description2":"Since last month" , "description_class":"fas fa-arrow-down", "icon_div_class":"icon icon-shape bg-success text-white rounded-circle shadow" , "icon_class":"fas fa-users"}
+
+        expenses = {"title":"Expenses", "span_text": IncampusStudent.objects.all().count() , "description1":"12%" , "description2":"Since last month" , "description_class":"fas fa-arrow-up", "icon_div_class":"icon icon-shape bg-success text-white rounded-circle shadow" , "icon_class":"fas fa-percent"}
+
+        response.append(students)
+        response.append(teachers)
+        response.append(income)
+        response.append(expenses)
+
         return response
 
 

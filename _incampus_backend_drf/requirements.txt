@@ -1,3 +1,5 @@
 djangorestframework_simplejwt
 python-dateutil
 django-cors-headers
+faker
+
