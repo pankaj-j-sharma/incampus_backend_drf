@@ -45,8 +45,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    '_incampus_backend_drf',
     'rest_framework',
+    '_incampus_backend_drf',
+    'corsheaders',
     'userprofile',
     'grade',
     'teacher',
@@ -54,6 +55,7 @@ INSTALLED_APPS = [
     'attendance',
     'payment',
     'friends',
+    'event',
 ]
 
 REST_FRAMEWORK = {
@@ -70,6 +72,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:53269',
 ]
 
 ROOT_URLCONF = '_incampus_backend_drf.urls'
