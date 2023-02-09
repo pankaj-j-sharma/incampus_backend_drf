@@ -2,6 +2,7 @@ from student.models import *
 from teacher.models import *
 from dateutil.parser import parse
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import traceback
 
 class DashboardDataService:
@@ -27,8 +28,12 @@ class DashboardDataService:
         students = {"title":"Students", "span_text": IncampusStudent.objects.all().count() , "description1":"3.48%" , "description2":"Since last month" , "description_class":"fa fa-arrow-up", "icon_div_class":"icon icon-shape bg-success text-white rounded-circle shadow" , "icon_class":"fas fa-chart-bar"}
 
         teachers = {"title":"Teachers", "span_text": IncampusTeacher.objects.all().count() , "description1":"3.48%" , "description2":"Since last month" , "description_class":"fas fa-arrow-down", "icon_div_class":"icon icon-shape bg-success text-white rounded-circle shadow" , "icon_class":"fas fa-chart-pie"}
+        
+        current_date = datetime.now().date() - relativedelta(months=1)
+        current_month = current_date.strftime("%B")
+        current_year = current_date.strftime("%Y")
 
-        income = {"title":"Income", "span_text": sum(StudentPayment.objects.all().values_list("amount_paid",flat=True)) , "description1":"1.10%" , "description2":"Since last month" , "description_class":"fas fa-arrow-down", "icon_div_class":"icon icon-shape bg-success text-white rounded-circle shadow" , "icon_class":"fas fa-users"}
+        income = {"title":"Income", "span_text": sum(StudentPayment.objects.all().filter(month=current_month,year=current_year).values_list("amount_paid",flat=True)) , "description1":"1.10%" , "description2":"Since last month" , "description_class":"fas fa-arrow-down", "icon_div_class":"icon icon-shape bg-success text-white rounded-circle shadow" , "icon_class":"fas fa-users"}
 
         expenses = {"title":"Expenses", "span_text": IncampusStudent.objects.all().count() , "description1":"12%" , "description2":"Since last month" , "description_class":"fas fa-arrow-up", "icon_div_class":"icon icon-shape bg-success text-white rounded-circle shadow" , "icon_class":"fas fa-percent"}
 
