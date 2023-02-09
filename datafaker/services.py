@@ -1,9 +1,13 @@
 from faker import Faker
 from grade.models import Grade,Subject
+from student.models import IncampusStudent,StudentPayment
 from grade.serializers import SubjectListSerializer,GradeListSerializer
-from student.serializers import StudentListSerializer
+from student.serializers import StudentListSerializer,StudentPaymentListSerializer
 from teacher.serializers import TeacherListSerializer
 import random
+import datetime
+from dateutil.relativedelta import relativedelta
+
 
 # fake = Faker(['en-US', 'en_US', 'en_US', 'en-US'])
 
@@ -17,7 +21,7 @@ class FakeDataGeneratorService:
         profiles=[]
         for i in range(num):
             profile_dct={}
-            profile_dct["username"] = self.data_gen_obj.user_name()
+            profile_dct["username"] = self.data_gen_obj.user_name()+str(random.randint(1,9999)).rjust(4,'0')
             profile_dct["first_name"] = self.data_gen_obj.first_name()
             profile_dct["last_name"] = self.data_gen_obj.last_name()
             profile_dct["email"] = self.data_gen_obj.free_email()
@@ -158,3 +162,45 @@ class FakeDataGeneratorService:
         else:
             print(grade_serialiser.errors)
         return grade_serialiser.data        
+
+
+    def create_student_payments(self):
+        all_students = IncampusStudent.objects.all().values_list("id",flat=True)
+        status = random.choice(["Paid","Pending","Declined"])
+        amount_due = random.randint(5000,7000)
+        amount_paid = amount_due - random.randint(0,999)
+        
+        start_date = datetime.date(2021,1,1)
+        current_date = datetime.datetime.now().date()
+        
+        tmp_date = start_date
+
+        for student in all_students:
+            student_payment_list = []
+            tmp_date = start_date # reset tmp date back once completed for a student
+            while tmp_date>=start_date and tmp_date<=current_date:
+                tmp_date += relativedelta(months=1)
+
+                tmp_month = tmp_date.strftime("%B")
+                tmp_year = tmp_date.strftime("%Y")
+                
+                student_payment = StudentPayment.objects.filter(student__id=student,month=tmp_month,year=tmp_year)
+
+                if not student_payment:
+                    student_payment_dict = {}
+                    student_payment_dict["student"] = student
+                    student_payment_dict["month"] = tmp_month
+                    student_payment_dict["year"] = tmp_year
+                    student_payment_dict["status"] = status
+                    student_payment_dict["amount_due"] = amount_due
+                    student_payment_dict["amount_paid"] = amount_paid
+                    student_payment_list.append(student_payment_dict)
+
+            student_payment_serialiser = StudentPaymentListSerializer(data=student_payment_list,many=True)
+            if student_payment_serialiser.is_valid():
+                student_payment_serialiser.save()
+            else:
+                print(student_payment_serialiser.errors)
+
+        return student_payment_serialiser.data        
+

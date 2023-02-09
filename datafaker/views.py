@@ -84,3 +84,14 @@ class TeachersDataRefreshAPIView(APIView,FakeDataGeneratorServiceClient):
             teacher_count = json_body.get("no")
         output_response["results"]= self.fake_data_gen_service_obj.create_teachers(teacher_count)
         return Response(output_response,status=HTTP_200_OK) 
+
+
+class StudentPaymentsDataRefreshAPIView(APIView,FakeDataGeneratorServiceClient):
+
+    def __init__(self):
+        self.init_service_obj()
+  
+    def post(self, request, format=None):
+        output_response={}
+        output_response["results"]= self.fake_data_gen_service_obj.create_student_payments()
+        return Response(output_response,status=HTTP_200_OK) 
