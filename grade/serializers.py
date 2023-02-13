@@ -4,7 +4,8 @@ from rest_framework import serializers
 class ClassroomListSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClassRoom
-        fields="__all__"
+        fields=["id","name","location","student_count","status","created"]
+
        
 class GradeListSerializer(serializers.ModelSerializer):
     class Meta:

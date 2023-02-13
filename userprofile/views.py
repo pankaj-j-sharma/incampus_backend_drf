@@ -21,6 +21,8 @@ class ProfileDetailsAPIView(RetrieveUpdateAPIView):
     def get_object(self):
         try:
             id = self.request.query_params.get('id',None)
+            if not id:
+                id = self.request.user.id
             return IncampusUser.objects.get(id=id)
         except IncampusUser.DoesNotExist:
             raise Http404    

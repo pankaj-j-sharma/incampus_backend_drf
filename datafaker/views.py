@@ -95,3 +95,19 @@ class StudentPaymentsDataRefreshAPIView(APIView,FakeDataGeneratorServiceClient):
         output_response={}
         output_response["results"]= self.fake_data_gen_service_obj.create_student_payments()
         return Response(output_response,status=HTTP_200_OK) 
+
+
+class ClassroomDataRefreshAPIView(APIView,FakeDataGeneratorServiceClient):
+
+    def __init__(self):
+        self.init_service_obj()
+
+    def get(self, request, format=None):
+        output_response={}
+        output_response["results"]= self.fake_data_gen_service_obj.list_classrooms()
+        return Response(output_response,status=HTTP_200_OK) 
+
+    def post(self, request, format=None):
+        output_response={}
+        output_response["results"]= self.fake_data_gen_service_obj.create_classrooms()
+        return Response(output_response,status=HTTP_200_OK) 

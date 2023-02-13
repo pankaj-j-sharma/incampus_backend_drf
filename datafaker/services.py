@@ -1,7 +1,7 @@
 from faker import Faker
 from grade.models import Grade,Subject
 from student.models import IncampusStudent,StudentPayment
-from grade.serializers import SubjectListSerializer,GradeListSerializer
+from grade.serializers import SubjectListSerializer,GradeListSerializer,ClassroomListSerializer
 from student.serializers import StudentListSerializer,StudentPaymentListSerializer
 from teacher.serializers import TeacherListSerializer
 import random
@@ -67,6 +67,30 @@ class FakeDataGeneratorService:
         ]
         return subject_list
 
+    def list_classrooms(self):
+        classroom_list = [
+            'The Sunshine Room',
+            'Rainbow Dazzlers',
+            'Creative Corner',
+            'Hiking Munchkins',
+            'Science Station',
+            'The Learning Cafe',
+            'Mental Bois',
+            'The Brainy Bunch',
+            'Cute Gingerbread',
+            'Savoir Faire',
+            'Nerds of a Feather',
+            'Little Flamboyant',
+            'Stylishness Hub',
+            'The Masterminds',
+            'Tomorrow Castle',
+            'Wisdom Stripe',
+            'Little Stars',
+            'Little Moons',
+            'Tiny Tots',
+            'Little Performers',
+        ]
+        return classroom_list
 
     def create_students(self,num=10):
         profile_list_raw = self.generate_personal_info(num) # raw profile lists
@@ -204,3 +228,26 @@ class FakeDataGeneratorService:
 
         return student_payment_serialiser.data        
 
+    def create_classrooms(self):
+        classroom_list_raw = self.list_classrooms() # raw classroom lists
+        classroom_list = []
+
+        base_location = 101
+        base_student_count = [100,250]
+
+        for i,classroom in enumerate(classroom_list_raw):
+            classroom_dct={}
+            classroom_dct["name"]=classroom
+            base_location=base_location+1
+            if base_location%100>10:
+                base_location = base_location+101 - base_location%100
+            classroom_dct["location"] = base_location
+            classroom_dct["student_count"] = random.randint(base_student_count[0],base_student_count[1])
+            classroom_list.append(classroom_dct)
+
+        classroom_serialiser = ClassroomListSerializer(data=classroom_list,many=True)
+        if classroom_serialiser.is_valid():
+            classroom_serialiser.save()
+        else:
+            print(classroom_serialiser.errors)
+        return classroom_serialiser.data        

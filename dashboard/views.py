@@ -19,6 +19,10 @@ class DashboardDataRetrieveAPIView(RetrieveAPIView,DashboardDataServiceClient):
         self.init_service_obj()
 
     def get(self, request, format=None):
+        username = request.user.username
+        userid = request.user.id
+        print("admin",userid,username)
+
         output_response={'success':False , 'results':{}}
 
         output_response['results']["card_data"] = self.dashboard_data_service_obj.load_dashboard_card_data()
