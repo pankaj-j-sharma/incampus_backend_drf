@@ -1,3 +1,4 @@
+from student.models import IncampusStudent
 from .models import *
 from rest_framework import serializers
 
@@ -8,9 +9,15 @@ class ClassroomListSerializer(serializers.ModelSerializer):
 
        
 class GradeListSerializer(serializers.ModelSerializer):
+
+    student_count = serializers.SerializerMethodField('get_student_count')
+
+    def get_student_count(self, obj):
+        return IncampusStudent.objects.filter(grade=obj).count()
+
     class Meta:
         model = Grade
-        fields="__all__"
+        fields=["id","name","admission_fee","hall_charges","created","student_count"]
 
 class ExamGradeListSerializer(serializers.ModelSerializer):
     class Meta:

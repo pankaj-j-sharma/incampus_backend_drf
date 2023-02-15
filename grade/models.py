@@ -7,12 +7,7 @@ class ClassRoom(BaseModel):
     location = models.CharField(max_length=255, blank=True, null=True)
     student_count = models.IntegerField(blank=True,null=True)
     status = models.CharField(max_length=255, blank=True, null=True, default="Active")
-    
-    def created(self):
-        try:
-            return self.created_at.strftime("%d %b %Y %I:%M %p")  
-        except:
-            pass
+
 
 class Grade(BaseModel):
     name = models.CharField(max_length=50, blank=True, null=True)
