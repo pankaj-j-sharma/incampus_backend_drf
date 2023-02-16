@@ -29,6 +29,25 @@ class SubjectDataRefreshAPIView(APIView,FakeDataGeneratorServiceClient):
         return Response(output_response,status=HTTP_200_OK)  
 
 
+
+class SubjectRouteDataRefreshAPIView(APIView,FakeDataGeneratorServiceClient):
+
+    def __init__(self):
+        self.init_service_obj()
+
+    def get(self, request, format=None):
+        output_response={}
+        output_response["results"]= self.fake_data_gen_service_obj.list_subjectroutes()
+        return Response(output_response,status=HTTP_200_OK)  
+
+    def post(self, request, format=None):
+        output_response={}
+        json_body = request.data
+        print(json_body)
+        output_response["results"]= self.fake_data_gen_service_obj.create_subjectroutes()
+        return Response(output_response,status=HTTP_200_OK)  
+
+
 class GradesDataRefreshAPIView(APIView,FakeDataGeneratorServiceClient):
 
     def __init__(self):
@@ -110,4 +129,20 @@ class ClassroomDataRefreshAPIView(APIView,FakeDataGeneratorServiceClient):
     def post(self, request, format=None):
         output_response={}
         output_response["results"]= self.fake_data_gen_service_obj.create_classrooms()
+        return Response(output_response,status=HTTP_200_OK) 
+
+
+class DailyTimeTableDataRefreshAPIView(APIView,FakeDataGeneratorServiceClient):
+
+    def __init__(self):
+        self.init_service_obj()
+
+    def get(self, request, format=None):
+        output_response={}
+        output_response["results"]= self.fake_data_gen_service_obj.list_dailytimetables()
+        return Response(output_response,status=HTTP_200_OK) 
+
+    def post(self, request, format=None):
+        output_response={}
+        output_response["results"]= self.fake_data_gen_service_obj.create_dailytimetables()
         return Response(output_response,status=HTTP_200_OK) 

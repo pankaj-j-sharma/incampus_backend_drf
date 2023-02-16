@@ -32,6 +32,9 @@ urlpatterns = [
 
     path('examschedulelist', ExamScheduleListAPIView.as_view(), name = 'list_examschedule'),
     path('examscheduleinfo', ExamScheduleRetrieveUpdateAPIView.as_view(), name = 'update_examschedule'),
-    path('create_examschedule', ExamScheduleCreateAPIView.as_view(), name = 'create_examschedule')
+    path('create_examschedule', ExamScheduleCreateAPIView.as_view(), name = 'create_examschedule'),
+
+    # data for dropdowns  
+    path('gradelistddn', GradeListDdnAPIView.as_view(), name = 'list_grade_ddn'),
 
 ]

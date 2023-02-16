@@ -34,6 +34,10 @@ class GradeListAPIView(ListAPIView):
     queryset = Grade.objects.all()
     serializer_class=GradeListSerializer
 
+class GradeListDdnAPIView(ListAPIView):
+    queryset = Grade.objects.all()
+    serializer_class=GradeListDdnSerializer
+
 
 class GradeRetrieveUpdateAPIView(RetrieveUpdateDestroyAPIView):
     model = Grade
@@ -101,7 +105,7 @@ class SubjectCreateAPIView(CreateAPIView):
 
 # SubjectRouting Module CRUD operations
 class SubjectRoutingListAPIView(ListAPIView):
-    queryset = SubjectRouting.objects.all()
+    queryset = SubjectRouting.objects.all().order_by("id")
     serializer_class=SubjectRoutingListSerializer
 
 
@@ -165,9 +169,9 @@ class DailyScheduleListAPIView(ListAPIView):
             teacher_id = self.request.query_params.get('teacher_id',None)
             grade_id = self.request.query_params.get('grade_id',None)
             classroom_id = self.request.query_params.get('classroom_id',None)
-            dailyscheduleobj = list(chain(DailyTimeTable.objects.filter(id=id),DailyTimeTable.objects.filter(teacher_id=teacher_id),DailyTimeTable.objects.filter(grade_id=grade_id),DailyTimeTable.objects.filter(classroom_id=classroom_id)))            
+            dailyscheduleobj = list(chain(DailyTimeTable.objects.filter(id=id),DailyTimeTable.objects.filter(teacher_id=teacher_id),DailyTimeTable.objects.filter(grade_id=grade_id).order_by("schedule_day","start_time"),DailyTimeTable.objects.filter(classroom_id=classroom_id)))            
             if not ( id or teacher_id or grade_id or classroom_id):
-                dailyscheduleobj = DailyTimeTable.objects.all()
+                dailyscheduleobj = DailyTimeTable.objects.order_by("schedule_day","start_time").all()
             return dailyscheduleobj
         except DailyTimeTable.DoesNotExist:
             raise Http404    

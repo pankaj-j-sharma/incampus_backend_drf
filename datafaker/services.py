@@ -1,7 +1,8 @@
 from faker import Faker
-from grade.models import Grade,Subject
+from grade.models import Grade,Subject,SubjectRouting,ClassRoom
+from teacher.models import IncampusTeacher
 from student.models import IncampusStudent,StudentPayment
-from grade.serializers import SubjectListSerializer,GradeListSerializer,ClassroomListSerializer
+from grade.serializers import SubjectListSerializer,GradeListSerializer,ClassroomListSerializer,SampleDataSubjectRoutingListSerializer,SampleDailyTimetableListSerializer
 from student.serializers import StudentListSerializer,StudentPaymentListSerializer
 from teacher.serializers import TeacherListSerializer
 import random
@@ -49,6 +50,75 @@ class FakeDataGeneratorService:
             "Economics"
         ]
         return subject_list
+
+    def list_subjectroutes(self):
+        subjectroute_list = []
+        all_subjects = Subject.objects.all().values("id","name")
+        all_grades = Grade.objects.all().values("id","name")
+        all_teachers = IncampusTeacher.objects.all().values_list("id",flat=True)
+        for subject in all_subjects:
+            subject_fee = random.randint(100,400)
+            for grade in all_grades:
+                if not SubjectRouting.objects.filter(subject__id = subject.get("id"),grade__id = grade.get("id")):
+                    teacher = random.choice(all_teachers)
+                    subject_fee += random.randint(10,50)
+                    subjectroute_dict = {
+                        "subject":subject.get("id"),
+                        "grade":grade.get("id"),
+                        "teacher":teacher,
+                        "subject_fee":subject_fee
+                    }
+                    subjectroute_list.append(subjectroute_dict)
+        # sorting by grade to make sure grade wise data entry sequentially
+        subjectroute_list = sorted(subjectroute_list, key=lambda k: k.get("grade")) 
+        return subjectroute_list
+
+    def __gen_start_end_time_list(self,start,end):
+        output=[]
+        start_time = start
+        end_time = None
+        while start_time<end:
+            end_time = datetime.time(start_time.hour+1,start_time.minute,start_time.second)
+            output.append(
+                {
+                    "start_time":start_time,
+                    "end_time":end_time
+                }
+            )
+            start_time=end_time
+        return output
+
+    def list_dailytimetables(self):
+        dailytimetable_list = []
+        all_grades = Grade.objects.all().values("id","name")
+        all_subjects = Subject.objects.all().values("id","name")
+        all_teachers = IncampusTeacher.objects.all().values_list("id",flat=True)
+        all_classrooms = ClassRoom.objects.all().values_list("id",flat=True)
+        schedule_days = [
+            "Monday","Tuesday","Wednesday","Thursday","Friday"
+        ]
+        start_time = datetime.time(9, 0, 0)
+        end_time = datetime.time(16, 0, 0)
+        all_times_list = self.__gen_start_end_time_list(start_time,end_time)
+        for grade in all_grades:
+            for scheduleday in schedule_days:
+                for tm in all_times_list:
+                    subj = random.choice(all_subjects)
+                    classroom = random.choice(all_classrooms)
+                    all_teachers = SubjectRouting.objects.filter(grade__id=grade.get("id"),subject__id=subj.get("id")).values_list("teacher__id",flat=True)
+                    if all_teachers:
+                        teacher = random.choice(all_teachers)
+                        dailytimetable_dict = {}
+                        dailytimetable_dict["schedule_day"] = scheduleday
+                        dailytimetable_dict["start_time"] = tm.get("start_time")
+                        dailytimetable_dict["end_time"] = tm.get("end_time")
+                        dailytimetable_dict["classroom"] = classroom
+                        dailytimetable_dict["subject"] = subj.get("id")
+                        dailytimetable_dict["grade"] = grade.get("id")
+                        dailytimetable_dict["teacher"] = teacher
+                        dailytimetable_list.append(dailytimetable_dict)
+        return dailytimetable_list
+
 
     def list_grades(self):
         subject_list = [
@@ -165,6 +235,15 @@ class FakeDataGeneratorService:
             print(subj_serialiser.errors)
         return subj_serialiser.data        
 
+    def create_subjectroutes(self):
+        subjectroutes_list = self.list_subjectroutes() # raw subject route lists
+        subjectroutes_serialiser = SampleDataSubjectRoutingListSerializer(data=subjectroutes_list,many=True)
+        if subjectroutes_serialiser.is_valid():
+            subjectroutes_serialiser.save()
+        else:
+            print(subjectroutes_serialiser.errors)
+        return subjectroutes_serialiser.data        
+
 
     def create_grades(self):
         grade_list_raw = self.list_grades() # raw grade lists
@@ -251,3 +330,13 @@ class FakeDataGeneratorService:
         else:
             print(classroom_serialiser.errors)
         return classroom_serialiser.data        
+
+
+    def create_dailytimetables(self):
+        daily_timetable_list = self.list_dailytimetables()
+        daily_timetable_serialiser = SampleDailyTimetableListSerializer(data=daily_timetable_list,many=True)
+        if daily_timetable_serialiser.is_valid():
+            daily_timetable_serialiser.save()
+        else:
+            print(daily_timetable_serialiser.errors)
+        return daily_timetable_serialiser.data        

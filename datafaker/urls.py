@@ -8,4 +8,6 @@ urlpatterns = [
     path('student_payments', StudentPaymentsDataRefreshAPIView.as_view(), name = 'student_payments_refresh'),
     path('teachers', TeachersDataRefreshAPIView.as_view(), name = 'teacher_refresh'),
     path('classrooms', ClassroomDataRefreshAPIView.as_view(), name = 'classroom_refresh'),
+    path('subject_routes', SubjectRouteDataRefreshAPIView.as_view(), name = 'subject_route_refresh'),
+    path('daily_timetable', DailyTimeTableDataRefreshAPIView.as_view(), name = 'daily_timetable_refresh'),
 ]
