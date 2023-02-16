@@ -67,9 +67,17 @@ class DailyTimetableListSerializer(serializers.ModelSerializer):
     teacher_name = serializers.SerializerMethodField('get_teacher_name')
     subject_name = serializers.CharField(source='subject.name')
     classroom_name = serializers.CharField(source='classroom.name')
+    start_time = serializers.SerializerMethodField('get_start_time')
+    end_time = serializers.SerializerMethodField('get_end_time')
 
     def get_teacher_name(self, obj):
         return obj.teacher.first_name+" "+obj.teacher.last_name
+
+    def get_start_time(self, obj):
+        return obj.start_time.strftime("%I:%M %p")
+
+    def get_end_time(self, obj):
+        return obj.end_time.strftime("%I:%M %p")
 
     class Meta:
         model = DailyTimeTable
