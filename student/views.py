@@ -6,7 +6,7 @@ from django.http import Http404
 
 # Student Module CRUD operations
 class StudentListAPIView(ListAPIView):
-    queryset = IncampusStudent.objects.all()
+    queryset = IncampusStudent.objects.order_by("grade","first_name","last_name").all()
     serializer_class=StudentListSerializer
 
 
@@ -43,7 +43,7 @@ class StudentCreateAPIView(CreateAPIView):
 
 # StudentPayment Module CRUD operations
 class StudentPaymentListAPIView(ListAPIView):
-    queryset = StudentPayment.objects.all()
+    queryset = StudentPayment.objects.filter(id__lt=1000).all()
     serializer_class=StudentPaymentListSerializer
 
 
