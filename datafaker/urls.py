@@ -10,4 +10,5 @@ urlpatterns = [
     path('classrooms', ClassroomDataRefreshAPIView.as_view(), name = 'classroom_refresh'),
     path('subject_routes', SubjectRouteDataRefreshAPIView.as_view(), name = 'subject_route_refresh'),
     path('daily_timetable', DailyTimeTableDataRefreshAPIView.as_view(), name = 'daily_timetable_refresh'),
+    path('attendance', AttendanceDataRefreshAPIView.as_view(), name = 'attendance_refresh'),
 ]

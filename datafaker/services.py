@@ -1,4 +1,6 @@
 from faker import Faker
+from attendance.models import IncampusAttendance
+from attendance.serializers import SampleAttendanceListSerializer
 from grade.models import Grade,Subject,SubjectRouting,ClassRoom
 from teacher.models import IncampusTeacher
 from student.models import IncampusStudent,StudentPayment
@@ -161,6 +163,50 @@ class FakeDataGeneratorService:
             'Little Performers',
         ]
         return classroom_list
+
+    def list_student_attendance(self):
+        attendance_list=[]
+        all_students = IncampusStudent.objects.all().values_list("id",flat=True)[:10]
+
+        start_date = datetime.datetime(2021,1,1)
+        current_date = datetime.datetime.now()
+        in_time = datetime.time(9, 1, 0)
+        out_time = datetime.time(16, 5, 0)
+        attendance_types=[("in_time",in_time),("out_time",out_time)]
+        tmp_date = start_date
+
+        for student in all_students:
+
+            tmp_date = start_date # reset tmp date back once completed for a student
+            
+            while tmp_date>=start_date and tmp_date<=current_date:                
+                tmp_date += datetime.timedelta(days=1)
+                skip_day = random.randint(1,10)<3
+                if tmp_date.weekday()<5 and not skip_day:
+                    for attendance_type in attendance_types:
+                        attendance_dict={}
+                        attendance_dict["month"] = tmp_date.strftime("%B")
+                        attendance_dict["year"] = tmp_date.strftime("%Y")
+                        attendance_dict["incampus_type"]="student"
+                        attendance_dict["attendance_type"]=attendance_type[0]
+                        attendance_dict["attendance_datetime"] = tmp_date.replace(hour=attendance_type[1].hour,minute=attendance_type[1].minute)
+                        attendance_dict["student"] = student
+
+                        attendance_exist = IncampusAttendance.objects\
+                            .filter(\
+                                incampus_type=attendance_dict.get("incampus_type"),\
+                                month=attendance_dict.get("month"),\
+                                year=attendance_dict.get("year"),\
+                                attendance_type=attendance_dict.get("attendance_type"),\
+                                attendance_datetime=attendance_dict.get("attendance_datetime"),\
+                                student__id=attendance_dict.get("student"),                               
+                                )
+                        if attendance_exist:
+                            print("already exists, skipping ..")
+                        else:
+                            yield attendance_dict
+                        # attendance_list.append(attendance_dict)
+        # return attendance_list
 
     def create_students(self,num=10):
         profile_list_raw = self.generate_personal_info(num) # raw profile lists
@@ -340,3 +386,14 @@ class FakeDataGeneratorService:
         else:
             print(daily_timetable_serialiser.errors)
         return daily_timetable_serialiser.data        
+
+
+    def create_student_attendance(self):
+        student_attendance_serialiser=None
+        for student_attendance_list in self.list_student_attendance():
+            student_attendance_serialiser = SampleAttendanceListSerializer(data=student_attendance_list)
+            if student_attendance_serialiser.is_valid():
+                student_attendance_serialiser.save()
+            else:
+                print(student_attendance_serialiser.errors)
+        return student_attendance_serialiser.data        
