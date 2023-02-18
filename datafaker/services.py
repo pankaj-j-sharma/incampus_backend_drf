@@ -1,15 +1,17 @@
 from faker import Faker
 from attendance.models import IncampusAttendance
 from attendance.serializers import SampleAttendanceListSerializer
-from grade.models import Grade,Subject,SubjectRouting,ClassRoom
+from grade.models import Grade, IncampusExam,Subject,SubjectRouting,ClassRoom
 from teacher.models import IncampusTeacher
 from student.models import IncampusStudent,StudentPayment
-from grade.serializers import SubjectListSerializer,GradeListSerializer,ClassroomListSerializer,SampleDataSubjectRoutingListSerializer,SampleDailyTimetableListSerializer
+from grade.serializers import SampleExamListSerializer, SampleExamScheduleListSerializer, SubjectListSerializer,GradeListSerializer,ClassroomListSerializer,SampleDataSubjectRoutingListSerializer,SampleDailyTimetableListSerializer
 from student.serializers import StudentListSerializer,StudentPaymentListSerializer
 from teacher.serializers import TeacherListSerializer
 import random
 import datetime
 from dateutil.relativedelta import relativedelta
+
+from userprofile.models import IncampusUser
 
 
 # fake = Faker(['en-US', 'en_US', 'en_US', 'en-US'])
@@ -208,6 +210,81 @@ class FakeDataGeneratorService:
                         # attendance_list.append(attendance_dict)
         # return attendance_list
 
+    def list_exams(self):
+        exam_list=[]
+        all_grades = Grade.objects.all().values_list("id",flat=True)
+        all_exams=[
+            {
+            "name":"Unit Test I",
+            "description":"First Unit Test"
+            },
+            {
+            "name":"Term Test I",
+            "description":"First Term Test"
+            },
+            {
+            "name":"Unit Test II",
+            "description":"Second Unit Test"
+            },
+            {
+            "name":"Term Test II",
+            "description":"Second Term Test"
+            },
+        ]
+        for grade in all_grades:
+            for exam in all_exams:
+                exam_dict = {}
+                exam_dict.update(exam)
+                exam_dict["grade"]=grade
+                exam_list.append(exam_dict)
+        return exam_list
+
+
+    def list_exam_schedules(self):
+        exam_schedules_list=[]
+        
+        all_exams = IncampusExam.objects.all()
+        all_subjects = Subject.objects.all().values_list("id",flat=True)
+        all_classrooms = ClassRoom.objects.all().values_list("id",flat=True)
+        all_supervisors = IncampusTeacher.objects.all().values_list("id",flat=True)
+        start_time_list = [datetime.time(9,0,0),datetime.time(12,0,0),datetime.time(14,0,0)]
+        max_marks_list = [75,100,150,200]
+        exam_date_dct = {
+            "Unit Test I":datetime.date(2023,8,21),
+            "Term Test I" : datetime.date(2023,11,27),
+            "Unit Test II":datetime.date(2024,1,15),
+            "Term Test II":datetime.date(2024,1,1)
+        }
+
+        for exam in all_exams:
+            exam_start_date = exam_date_dct[exam.name]
+            for subject in all_subjects :
+                start_time = random.choice(start_time_list)
+                exam_duration = start_time.hour+3
+                end_time = start_time.replace(hour=exam_duration)
+                exam_schedules_dict={
+                    "exam":exam.id,
+                    "classroom":random.choice(all_classrooms),
+                    "subject":subject,
+                    "exam_date":exam_start_date,
+                    "start_time":start_time,
+                    "end_time":end_time,
+                    "max_marks":random.choice(max_marks_list),
+                    "supervisor":random.choice(all_supervisors)
+                }
+                exam_schedules_list.append(exam_schedules_dict)
+
+                exam_start_date+=datetime.timedelta(days=random.choice([1,2,3]))
+                if exam_start_date.weekday() in [5,6]:
+                    exam_start_date+=datetime.timedelta(days=2)
+
+        return exam_schedules_list
+
+    def list_incampus_user(self):
+        incampus_user_list=[]
+        incampus_user_list = IncampusUser.objects.all().values()
+        return incampus_user_list
+
     def create_students(self,num=10):
         profile_list_raw = self.generate_personal_info(num) # raw profile lists
         student_list = []
@@ -397,3 +474,26 @@ class FakeDataGeneratorService:
             else:
                 print(student_attendance_serialiser.errors)
         return student_attendance_serialiser.data        
+
+
+    def create_exam(self):
+        exam_list = self.list_exams()
+        exam_serialiser = SampleExamListSerializer(data=exam_list,many=True)
+        if exam_serialiser.is_valid():
+            exam_serialiser.save()
+        else:
+            print(exam_serialiser.errors)
+        return exam_serialiser.data        
+
+
+    def create_exam_schedule(self):
+        exam_schedule_list = self.list_exam_schedules()
+        exam_schedule_serialiser = SampleExamScheduleListSerializer(data=exam_schedule_list,many=True)
+        if exam_schedule_serialiser.is_valid():
+            exam_schedule_serialiser.save()
+        else:
+            print(exam_schedule_serialiser.errors)
+        return exam_schedule_serialiser.data        
+
+    def sync_incampus_user(self):
+        pass

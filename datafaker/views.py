@@ -162,3 +162,51 @@ class AttendanceDataRefreshAPIView(APIView,FakeDataGeneratorServiceClient):
         output_response={}
         output_response["results"]= self.fake_data_gen_service_obj.create_student_attendance()
         return Response(output_response,status=HTTP_200_OK) 
+
+
+class ExamDataRefreshAPIView(APIView,FakeDataGeneratorServiceClient):
+
+    def __init__(self):
+        self.init_service_obj()
+
+    def get(self, request, format=None):
+        output_response={}
+        output_response["results"]= self.fake_data_gen_service_obj.list_exams()
+        return Response(output_response,status=HTTP_200_OK) 
+
+    def post(self, request, format=None):
+        output_response={}
+        output_response["results"]= self.fake_data_gen_service_obj.create_exam()
+        return Response(output_response,status=HTTP_200_OK) 
+
+
+class ExamScheduleDataRefreshAPIView(APIView,FakeDataGeneratorServiceClient):
+
+    def __init__(self):
+        self.init_service_obj()
+
+    def get(self, request, format=None):
+        output_response={}
+        output_response["results"]= self.fake_data_gen_service_obj.list_exam_schedules()
+        return Response(output_response,status=HTTP_200_OK) 
+
+    def post(self, request, format=None):
+        output_response={}
+        output_response["results"]= self.fake_data_gen_service_obj.create_exam_schedule()
+        return Response(output_response,status=HTTP_200_OK) 
+
+
+class IncampusUserDataRefreshAPIView(APIView,FakeDataGeneratorServiceClient):
+
+    def __init__(self):
+        self.init_service_obj()
+
+    def get(self, request, format=None):
+        output_response={}
+        output_response["results"]= self.fake_data_gen_service_obj.list_incampus_user()
+        return Response(output_response,status=HTTP_200_OK) 
+
+    def post(self, request, format=None):
+        output_response={}
+        output_response["results"]= self.fake_data_gen_service_obj.sync_incampus_user()
+        return Response(output_response,status=HTTP_200_OK) 

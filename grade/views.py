@@ -251,8 +251,16 @@ class ExamCreateAPIView(CreateAPIView):
 
 # ExamSchedule Module CRUD operations
 class ExamScheduleListAPIView(ListAPIView):
-    queryset = ExamSchedule.objects.all()
     serializer_class=ExamScheduleListSerializer
+
+    def get_queryset(self):
+        try:
+            exam_id = self.request.query_params.get('exam',None)
+            if exam_id:
+                examscheduleobj = ExamSchedule.objects.filter(exam__id=exam_id)
+                return examscheduleobj
+        except ExamSchedule.DoesNotExist:
+            raise Http404    
 
 
 class ExamScheduleRetrieveUpdateAPIView(RetrieveUpdateDestroyAPIView):

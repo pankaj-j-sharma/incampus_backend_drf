@@ -1,12 +1,12 @@
 from .models import *
 from django.http import Http404
 from rest_framework.response import Response
-from rest_framework.generics import RetrieveUpdateAPIView
+from rest_framework.generics import RetrieveUpdateAPIView,CreateAPIView
 from rest_framework import status
 from .serializers import *
 from rest_framework.views import APIView
 from .services import UserProfileService
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 
 
 class UserProfileServiceWrapper(APIView):
@@ -27,6 +27,10 @@ class ProfileDetailsAPIView(RetrieveUpdateAPIView):
         except IncampusUser.DoesNotExist:
             raise Http404    
 
+#Class based view to register user
+class RegisterUserAPIView(CreateAPIView):
+  permission_classes = (AllowAny,)
+  serializer_class = RegisterSerializer
 
 class SyncDrfToIncampusUserAPIView(UserProfileServiceWrapper):
 

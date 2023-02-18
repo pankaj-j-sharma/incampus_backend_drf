@@ -85,15 +85,33 @@ class DailyTimetableListSerializer(serializers.ModelSerializer):
 
 
 class ExamListSerializer(serializers.ModelSerializer):
+    grade_name = serializers.CharField(source='grade.name')
+
     class Meta:
         model = IncampusExam
-        fields="__all__"
+        fields=["id","name","description","status","grade_name","created"]
 
 
 class ExamScheduleListSerializer(serializers.ModelSerializer):
+
+    exam_date = serializers.SerializerMethodField('get_exam_date')
+    start_time = serializers.SerializerMethodField('get_start_time')
+    end_time = serializers.SerializerMethodField('get_end_time')
+    subject_name = serializers.CharField(source='subject.name')
+    classroom_name = serializers.CharField(source='classroom.name')
+
+    def get_start_time(self, obj):
+        return obj.start_time.strftime("%I:%M %p")
+
+    def get_end_time(self, obj):
+        return obj.end_time.strftime("%I:%M %p")
+
+    def get_exam_date(self, obj):
+        return obj.exam_date.strftime("%d %b %Y")
+
     class Meta:
         model = ExamSchedule
-        fields="__all__"
+        fields=["id","exam_date","start_time","end_time","max_marks","classroom_name","subject_name"]
 
 
 # Serializers for sample data generator 
@@ -107,4 +125,15 @@ class SampleDailyTimetableListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DailyTimeTable
+        fields="__all__"
+
+class SampleExamListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IncampusExam
+        fields="__all__"
+
+
+class SampleExamScheduleListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExamSchedule
         fields="__all__"
