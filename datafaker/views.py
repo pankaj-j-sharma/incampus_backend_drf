@@ -210,3 +210,21 @@ class IncampusUserDataRefreshAPIView(APIView,FakeDataGeneratorServiceClient):
         output_response={}
         output_response["results"]= self.fake_data_gen_service_obj.sync_incampus_user()
         return Response(output_response,status=HTTP_200_OK) 
+
+
+
+class IncampusFriendsDataRefreshAPIView(APIView,FakeDataGeneratorServiceClient):
+
+    def __init__(self):
+        self.init_service_obj()
+
+    def get(self, request, format=None):
+        output_response={}
+        output_response["results"]= self.fake_data_gen_service_obj.list_incampus_friends()
+        return Response(output_response,status=HTTP_200_OK) 
+
+    def post(self, request, format=None):
+        output_response={}
+        output_response["results"]= self.fake_data_gen_service_obj.create_incampus_friends()
+        return Response(output_response,status=HTTP_200_OK) 
+

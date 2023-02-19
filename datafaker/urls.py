@@ -14,5 +14,6 @@ urlpatterns = [
     path('exams', ExamDataRefreshAPIView.as_view(), name = 'exam_refresh'),
     path('exam_schedules', ExamScheduleDataRefreshAPIView.as_view(), name = 'exam_refresh'),
     path('refresh_user', IncampusUserDataRefreshAPIView.as_view(), name = 'user_refresh'),
+    path('friends', IncampusFriendsDataRefreshAPIView.as_view(), name = 'friends_refresh'),
     
 ]

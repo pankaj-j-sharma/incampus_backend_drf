@@ -1,9 +1,11 @@
 from faker import Faker
 from attendance.models import IncampusAttendance
 from attendance.serializers import SampleAttendanceListSerializer
+from friends.models import IncampusFriend
+from friends.serializers import SampleFriendListSerializer
 from grade.models import Grade, IncampusExam,Subject,SubjectRouting,ClassRoom
 from teacher.models import IncampusTeacher
-from student.models import IncampusStudent,StudentPayment
+from student.models import IncampusParent, IncampusStudent,StudentPayment
 from grade.serializers import SampleExamListSerializer, SampleExamScheduleListSerializer, SubjectListSerializer,GradeListSerializer,ClassroomListSerializer,SampleDataSubjectRoutingListSerializer,SampleDailyTimetableListSerializer
 from student.serializers import StudentListSerializer,StudentPaymentListSerializer
 from teacher.serializers import TeacherListSerializer
@@ -285,6 +287,37 @@ class FakeDataGeneratorService:
         incampus_user_list = IncampusUser.objects.all().values()
         return incampus_user_list
 
+    def list_incampus_friends(self):
+        friend_count = 500
+        incampus_friend_list = []
+        all_teachers = IncampusTeacher.objects.all().values("id","incampus_type")
+        all_students = IncampusStudent.objects.all().values("id","incampus_type")
+        all_parents = IncampusParent.objects.all().values("id","incampus_type")
+        all_others = IncampusUser.objects.all().values("id","incampus_type")
+        all_user_list = list(all_teachers)+list(all_students)+list(all_parents)+list(all_others)
+        random.shuffle(all_user_list)
+        all_status = ["Pending","Active","Removed"]
+        
+        for i in range(friend_count):
+            incampus_friend_dict={}
+            
+            random_user = random.choice(all_user_list)
+            random_friend = random.choice(all_user_list)
+
+            incampus_friend_dict["user"]=random_user.get("id")
+            incampus_friend_dict["user_type"]=random_user.get("incampus_type")
+            incampus_friend_dict["friend"]=random_friend.get("id")
+            incampus_friend_dict["friend_type"]=random_friend.get("incampus_type")
+            incampus_friend_dict["status"]=random.choice(all_status)
+
+            if not IncampusFriend.objects.filter(user__id = incampus_friend_dict["user"]) and \
+                not IncampusFriend.objects.filter(user__id = incampus_friend_dict["friend"]) and \
+                not IncampusFriend.objects.filter(friend__id = incampus_friend_dict["user"]) and \
+                not IncampusFriend.objects.filter(friend__id = incampus_friend_dict["friend"]):
+                incampus_friend_list.append(incampus_friend_dict)
+
+        return incampus_friend_list
+
     def create_students(self,num=10):
         profile_list_raw = self.generate_personal_info(num) # raw profile lists
         student_list = []
@@ -497,3 +530,13 @@ class FakeDataGeneratorService:
 
     def sync_incampus_user(self):
         pass
+
+    def create_incampus_friends(self):
+        incampus_friend_list = self.list_incampus_friends()
+        incampus_friend_serialiser = SampleFriendListSerializer(data=incampus_friend_list,many=True)
+        if incampus_friend_serialiser.is_valid():
+            incampus_friend_serialiser.save()
+        else:
+            print(incampus_friend_serialiser.errors)
+        return incampus_friend_serialiser.data        
+
