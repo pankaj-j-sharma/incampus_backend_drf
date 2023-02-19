@@ -13,3 +13,5 @@ pip install IndianNameGenerator
 
 https://zetcode.com/python/faker/#:~:text=AdvertisementsFaker,Faker%2C%20and%20by%20Ruby's%20Faker.
 
+# export data from sqlite to be imported to other db
+python manage.py dumpdata > incampus_db_data.json
