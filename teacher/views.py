@@ -13,7 +13,7 @@ class TeacherListAPIView(ListAPIView):
 
 class TeacherRetrieveUpdateAPIView(RetrieveUpdateDestroyAPIView):
     model = IncampusTeacher
-    serializer_class=TeacherListSerializer
+    serializer_class=TeacherInfoSerializer
 
     def __update_field(self,source,target):
         for attrib in source:

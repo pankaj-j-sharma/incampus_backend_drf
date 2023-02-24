@@ -16,6 +16,11 @@ class TeacherListSerializer(serializers.ModelSerializer):
         model = IncampusTeacher
         fields=["id","name","gender","created","phone_no","grade_count"]
 
+class TeacherInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IncampusTeacher
+        fields="__all__"
+
 class TeacherSalaryListSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeacherSalary

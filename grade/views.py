@@ -82,7 +82,7 @@ class ExamGradeCreateAPIView(CreateAPIView):
 
 # Subject Module CRUD operations
 class SubjectListAPIView(ListAPIView):
-    queryset = Subject.objects.all()
+    queryset = Subject.objects.all().order_by("-created_at")
     serializer_class=SubjectListSerializer
 
 
