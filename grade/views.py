@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 # Classroom Module CRUD operations
 class ClassroomListAPIView(ListAPIView):
-    queryset = ClassRoom.objects.all()
+    queryset = ClassRoom.objects.all().order_by("-id")
     serializer_class=ClassroomListSerializer
 
 
@@ -31,7 +31,7 @@ class ClassroomCreateAPIView(CreateAPIView):
 
 # Grade Module CRUD operations
 class GradeListAPIView(ListAPIView):
-    queryset = Grade.objects.all()
+    queryset = Grade.objects.all().order_by("-updated_at")
     serializer_class=GradeListSerializer
 
 class GradeListDdnAPIView(ListAPIView):

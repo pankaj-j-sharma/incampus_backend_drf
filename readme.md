@@ -15,3 +15,5 @@ https://zetcode.com/python/faker/#:~:text=AdvertisementsFaker,Faker%2C%20and%20b
 
 # export data from sqlite to be imported to other db
 python manage.py dumpdata > incampus_db_data.json
+
+# paytm payment gateway integration try to get the API keys in the incognito window 
