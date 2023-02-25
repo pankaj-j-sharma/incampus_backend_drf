@@ -1,5 +1,6 @@
 from rest_framework.generics import ListAPIView,RetrieveUpdateAPIView,CreateAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
+from rest_framework import status
 from teacher.models import *
 from teacher.serializers import *
 from django.http import Http404
@@ -7,13 +8,16 @@ from django.http import Http404
 
 # Teacher Module CRUD operations
 class TeacherListAPIView(ListAPIView):
-    queryset = IncampusTeacher.objects.all()
+    queryset = IncampusTeacher.objects.all().order_by("-created_at")
     serializer_class=TeacherListSerializer
 
 
 class TeacherRetrieveUpdateAPIView(RetrieveUpdateDestroyAPIView):
     model = IncampusTeacher
-    serializer_class=TeacherInfoSerializer
+    # serializer_class=TeacherInfoSerializer
+
+    def get_serializer_class(self):
+        return TeacherInfoSerializer if self.request.GET else TeacherUpdateSerializer
 
     def __update_field(self,source,target):
         for attrib in source:
@@ -39,7 +43,16 @@ class TeacherRetrieveUpdateAPIView(RetrieveUpdateDestroyAPIView):
 
 class TeacherCreateAPIView(CreateAPIView):
     queryset = IncampusTeacher.objects.all()
-    serializer_class=TeacherListSerializer
+    serializer_class=TeacherCreateSerializer
+
+    def create(self, request, *args, **kwargs):
+        request.data["added_by"]=self.request.user.id
+        request.data["password"]="12345"
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 # Teacher Salary Module CRUD operations

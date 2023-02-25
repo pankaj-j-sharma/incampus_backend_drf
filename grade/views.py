@@ -105,7 +105,7 @@ class SubjectCreateAPIView(CreateAPIView):
 
 # SubjectRouting Module CRUD operations
 class SubjectRoutingListAPIView(ListAPIView):
-    queryset = SubjectRouting.objects.all().order_by("id")
+    queryset = SubjectRouting.objects.all().order_by("id")[:10]
     serializer_class=SubjectRoutingListSerializer
 
 
