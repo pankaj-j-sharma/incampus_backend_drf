@@ -7,6 +7,10 @@ class ClassroomListSerializer(serializers.ModelSerializer):
         model = ClassRoom
         fields=["id","name","location","student_count","status","created"]
 
+class ClassroomDdnListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClassRoom
+        fields=["id","name"]
        
 class GradeListSerializer(serializers.ModelSerializer):
 
@@ -52,6 +56,12 @@ class SubjectListSerializer(serializers.ModelSerializer):
         fields=["id","name","created","student_count","grade_count","is_mapped"]
 
 
+class SubjectListDdnSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subject
+        fields=["id","name"]
+
+
 class SubjectRoutingListSerializer(serializers.ModelSerializer):
     grade_name = serializers.CharField(source='grade.name')
     teacher_name = serializers.CharField(source='teacher.first_name')
@@ -60,6 +70,30 @@ class SubjectRoutingListSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubjectRouting
         fields=["id","grade_name","teacher_name","subject_name","created","subject_fee"]
+
+class SubjectRoutingCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubjectRouting
+        fields="__all__"
+
+
+class SubjectRoutingInfoSerializer(serializers.ModelSerializer):
+    grade_name = serializers.CharField(source='grade.name')
+    teacher_name = serializers.SerializerMethodField('get_teacher_name')
+    subject_name = serializers.CharField(source='subject.name')
+
+    def get_teacher_name(self, obj):
+        return obj.teacher.first_name+" "+obj.teacher.last_name
+
+    class Meta:
+        model = SubjectRouting
+        fields=["id","grade_name","grade","teacher_name","teacher","subject_name","subject","created","subject_fee"]
+
+
+class SubjectRoutingUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubjectRouting
+        fields="__all__"
 
 
 class DailyTimetableListSerializer(serializers.ModelSerializer):
@@ -83,6 +117,10 @@ class DailyTimetableListSerializer(serializers.ModelSerializer):
         model = DailyTimeTable
         fields=["id","grade","teacher_name","subject_name","classroom_name","schedule_day","start_time","end_time","created"]
 
+class DailyTimetableCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DailyTimeTable
+        fields = "__all__"
 
 class ExamListSerializer(serializers.ModelSerializer):
     grade_name = serializers.CharField(source='grade.name')

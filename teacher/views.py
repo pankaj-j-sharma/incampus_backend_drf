@@ -11,6 +11,10 @@ class TeacherListAPIView(ListAPIView):
     queryset = IncampusTeacher.objects.all().order_by("-created_at")
     serializer_class=TeacherListSerializer
 
+class TeacherListDdnAPIView(ListAPIView):
+    queryset = IncampusTeacher.objects.all().order_by("-created_at")
+    serializer_class=TeacherListDdnSerializer
+
 
 class TeacherRetrieveUpdateAPIView(RetrieveUpdateDestroyAPIView):
     model = IncampusTeacher

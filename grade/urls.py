@@ -36,5 +36,7 @@ urlpatterns = [
 
     # data for dropdowns  
     path('gradelistddn', GradeListDdnAPIView.as_view(), name = 'list_grade_ddn'),
-
+    path('subjectlistddn', SubjectListDdnAPIView.as_view(), name = 'list_subject_ddn'),
+    path('classroomlistddn', ClassroomListDdnAPIView.as_view(), name = 'list_classroom_ddn'),
+    path('startendtimeddn', StartEndTimeDdnAPIView.as_view(), name = 'start_end_time_ddn'),
 ]

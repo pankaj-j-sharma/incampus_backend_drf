@@ -22,6 +22,17 @@ class TeacherListSerializer(serializers.ModelSerializer):
         model = IncampusTeacher
         fields=["id","name","gender","created","phone_no","grade_count"]
 
+class TeacherListDdnSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField('get_name')
+
+    def get_name(self, obj):
+        return obj.first_name+" "+obj.last_name
+
+    class Meta:
+        model = IncampusTeacher
+        fields=["id","name"]
+
+
 class TeacherInfoSerializer(serializers.ModelSerializer):
     added_by = serializers.SerializerMethodField('get_added_by')
     grade_count = serializers.SerializerMethodField('get_grade_count')

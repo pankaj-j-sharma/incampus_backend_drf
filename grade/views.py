@@ -4,13 +4,16 @@ from grade.serializers import *
 from django.http import Http404
 from itertools import chain
 from rest_framework.response import Response
-
+import datetime
 
 # Classroom Module CRUD operations
 class ClassroomListAPIView(ListAPIView):
     queryset = ClassRoom.objects.all().order_by("-id")
     serializer_class=ClassroomListSerializer
 
+class ClassroomListDdnAPIView(ListAPIView):
+    queryset = ClassRoom.objects.all().order_by("-id")
+    serializer_class=ClassroomDdnListSerializer
 
 class ClassroomRetrieveUpdateAPIView(RetrieveUpdateDestroyAPIView):
     model = ClassRoom
@@ -85,6 +88,10 @@ class SubjectListAPIView(ListAPIView):
     queryset = Subject.objects.all().order_by("-created_at")
     serializer_class=SubjectListSerializer
 
+# Subject Module CRUD operations
+class SubjectListDdnAPIView(ListAPIView):
+    queryset = Subject.objects.all().order_by("-created_at")
+    serializer_class=SubjectListDdnSerializer
 
 class SubjectRetrieveUpdateAPIView(RetrieveUpdateDestroyAPIView):
     model = Subject
@@ -105,13 +112,16 @@ class SubjectCreateAPIView(CreateAPIView):
 
 # SubjectRouting Module CRUD operations
 class SubjectRoutingListAPIView(ListAPIView):
-    queryset = SubjectRouting.objects.all().order_by("id")[:10]
+    queryset = SubjectRouting.objects.all().order_by("-id")[:10]
     serializer_class=SubjectRoutingListSerializer
 
 
 class SubjectRoutingRetrieveUpdateAPIView(RetrieveUpdateDestroyAPIView):
     model = Subject
-    serializer_class=SubjectRoutingListSerializer
+
+    def get_serializer_class(self):
+        return SubjectRoutingInfoSerializer if self.request.GET else SubjectRoutingUpdateSerializer
+
 
     def __update_field(self,source,target):
         for attrib in source:
@@ -155,7 +165,7 @@ class SubjectRoutingRetrieveUpdateAPIView(RetrieveUpdateDestroyAPIView):
 
 class SubjectRoutingCreateAPIView(CreateAPIView):
     queryset = SubjectRouting.objects.all()
-    serializer_class=SubjectRoutingListSerializer
+    serializer_class=SubjectRoutingCreateSerializer
 
 
 
@@ -206,7 +216,7 @@ class DailyScheduleRetrieveUpdateAPIView(RetrieveUpdateDestroyAPIView):
 
 class DailyScheduleCreateAPIView(CreateAPIView):
     queryset = DailyTimeTable.objects.all()
-    serializer_class=DailyTimetableListSerializer
+    serializer_class=DailyTimetableCreateSerializer
 
 
 
@@ -293,3 +303,23 @@ class ExamScheduleRetrieveUpdateAPIView(RetrieveUpdateDestroyAPIView):
 class ExamScheduleCreateAPIView(CreateAPIView):
     queryset = ExamSchedule.objects.all()
     serializer_class=ExamScheduleListSerializer
+
+
+class StartEndTimeDdnAPIView(ListAPIView):
+    def get(self,request):
+
+        start = datetime.time(9, 0, 0)
+        end = datetime.time(16, 0, 0)
+        output=[]
+        start_time = start
+        end_time = None
+        while start_time<end:
+            end_time = datetime.time(start_time.hour+1,start_time.minute,start_time.second)
+            output.append(
+                {
+                    "start_time":start_time,
+                    "end_time":end_time
+                }
+            )
+            start_time=end_time
+        return Response(output,status=200)
