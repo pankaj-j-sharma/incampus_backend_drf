@@ -41,7 +41,8 @@ class DailyTimeTable(BaseModel):
     subject= models.ForeignKey("grade.Subject",on_delete=models.CASCADE)
     grade= models.ForeignKey("grade.Grade",on_delete=models.CASCADE)
     teacher = models.ForeignKey("teacher.IncampusTeacher",on_delete=models.CASCADE)
-
+    class Meta:
+        unique_together = ('schedule_day', 'start_time','grade')
 
 class IncampusExam(BaseModel):
     name = models.CharField(max_length=255, blank=True, null=True)

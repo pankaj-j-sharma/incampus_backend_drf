@@ -140,6 +140,18 @@ WSGI_APPLICATION = '_incampus_backend_drf.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
+    'sqlite': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    },
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'amnaya',
+    #     'USER': 'pankaj',
+    #     'PASSWORD': 'qbolbk@123',
+    #     'HOST': '3.110.153.15',
+    #     'PORT': '5432',
+    # },
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
