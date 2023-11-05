@@ -15,13 +15,14 @@ class StudentListSerializer(serializers.ModelSerializer):
 
 class StudentInfoSerializer(serializers.ModelSerializer):
     added_by = serializers.SerializerMethodField('get_added_by')
+    grade_name = serializers.CharField(source='grade.name')
 
     def get_added_by(self, obj):
         return obj.added_by.first_name+" "+obj.added_by.last_name
     
     class Meta:
         model = IncampusStudent
-        fields=["id","username","email","address","incampus_type","first_name","last_name","gender","created","phone_no","added_by"]
+        fields=["id","username","email","address","incampus_type","first_name","last_name","gender","created","phone_no","grade_name","added_by"]
 
 
 class StudentUpdateSerializer(serializers.ModelSerializer):
