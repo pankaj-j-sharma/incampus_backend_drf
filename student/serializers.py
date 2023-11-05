@@ -12,6 +12,24 @@ class StudentListSerializer(serializers.ModelSerializer):
         model = IncampusStudent
         fields=["id","name","gender","grade_name","created","phone_no","profilepic"]
 
+
+class StudentInfoSerializer(serializers.ModelSerializer):
+    added_by = serializers.SerializerMethodField('get_added_by')
+
+    def get_added_by(self, obj):
+        return obj.added_by.first_name+" "+obj.added_by.last_name
+    
+    class Meta:
+        model = IncampusStudent
+        fields=["id","username","email","address","incampus_type","first_name","last_name","gender","created","phone_no","added_by"]
+
+
+class StudentUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IncampusStudent
+        fields="__all__"
+
+
 class StudentPaymentListSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField('get_name')
 

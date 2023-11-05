@@ -12,8 +12,11 @@ class StudentListAPIView(ListAPIView):
 
 class StudentRetrieveUpdateAPIView(RetrieveUpdateDestroyAPIView):
     model = IncampusStudent
-    serializer_class=StudentListSerializer
+    # serializer_class=StudentListSerializer
 
+    def get_serializer_class(self):
+        return StudentInfoSerializer if self.request.GET else StudentUpdateSerializer
+    
     def __update_field(self,source,target):
         for attrib in source:
             if getattr(target,attrib,None)!=None and source.get(attrib)!=getattr(target,attrib,None):
