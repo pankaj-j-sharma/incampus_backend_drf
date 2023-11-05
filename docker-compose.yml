@@ -14,27 +14,5 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    # volumes:
-    #   - "${NGINX_DIR}nginx.conf:/etc/nginx/conf.d/default.conf"
-    #   - "${CERTS_DIR}:/certs/"
-    #   - "${DHPARAM_FILE}:/etc/nginx/dhparam/dhparam.pem:ro"
-    #   - "${CACHE_DIR}:/var/cache"
     networks:
       - default
-
-  
-  # api:
-  #   image: "${API_REGISTRY}/${API_REPOSITORY}:${API_TAG}"
-  #   user: "${CURRENT_UID}"
-  #   deploy:
-  #     placement:
-  #       constraints:
-  #         - node.role == manager
-  #   volumes:
-  #     - "${DATA_DIR}:/opt/data"
-  #     - "${TEMP_DIR}:/tmp"
-  #   environment:
-  #     APPLICATION_ROOT: .
-  #   networks:
-  #     - default
-  #   command: gunicorn --bind 0.0.0.0:5000 --workers 4 --timeout 300 _incampus_backend_drf.wsgi:api
